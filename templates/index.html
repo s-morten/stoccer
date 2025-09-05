@@ -9,28 +9,95 @@
 </head>
 <body>
     <div class="container">
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link {% if active_tab == 'league' %}active{% endif %}" href="/">League</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if active_tab == 'portfolio' %}active{% endif %}" href="/portfolio">Portfolio</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if active_tab == 'market' %}active{% endif %}" href="/market">Market</a>
-            </li>
-        </ul>
+        <header class="d-flex justify-content-center py-3">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="/" class="nav-link {% if active_tab == 'league' %}active{% endif %}">League</a></li>
+                <li class="nav-item"><a href="/portfolio" class="nav-link {% if active_tab == 'portfolio' %}active{% endif %}">Portfolio</a></li>
+                <li class="nav-item"><a href="/market" class="nav-link {% if active_tab == 'market' %}active{% endif %}">Market</a></li>
+            </ul>
+        </header>
 
         <div class="tab-content">
             {% if active_tab == 'league' %}
-                <h1>League</h1>
-                <p>This is the league tab.</p>
+                <h1 class="text-center mb-4">League Standings</h1>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>Team</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for team in teams %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ team.name }}</td>
+                                <td>${{ "%.2f"|format(team.price) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             {% elif active_tab == 'portfolio' %}
-                <h1>Portfolio</h1>
-                <p>This is the portfolio tab.</p>
+                <h1 class="text-center mb-4">My Portfolio</h1>
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Total Portfolio Value</h5>
+                        <p class="card-text fs-2">${{ "%.2f"|format(portfolio.total_value) }}</p>
+                        <h6 class="card-subtitle mb-2 text-muted">Available Cash</h6>
+                        <p class="card-text fs-4">${{ "%.2f"|format(portfolio.cash) }}</p>
+                    </div>
+                </div>
+                <h2 class="text-center mb-3">My Holdings</h2>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Team</th>
+                                <th>Shares</th>
+                                <th>Current Price</th>
+                                <th>Total Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for holding in portfolio.holdings %}
+                            <tr>
+                                <td>{{ holding.name }}</td>
+                                <td>{{ holding.shares }}</td>
+                                <td>${{ "%.2f"|format(holding.price) }}</td>
+                                <td><strong>${{ "%.2f"|format(holding.value) }}</strong></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             {% elif active_tab == 'market' %}
-                <h1>Market</h1>
-                <p>This is the market tab.</p>
+                <h1 class="text-center mb-4">Stock Market</h1>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Team</th>
+                                <th>Stock Price</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for team in teams %}
+                            <tr>
+                                <td><strong>{{ team.name }}</strong></td>
+                                <td class="fs-5">${{ "%.2f"|format(team.price) }}</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm">Buy</button>
+                                    <button class="btn btn-danger btn-sm">Sell</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             {% endif %}
         </div>
     </div>
